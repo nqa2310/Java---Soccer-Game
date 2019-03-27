@@ -44,17 +44,18 @@ public class Player extends GameObject {
     public void run() {
         velocity.y += GRAVITY;
         velocity.x = 0;
-        moveVertical();
         move();
         limit();
-        position.add(velocity.x,velocity.y);
+        moveHorizontal();
+        moveVertical();
     }
+    
     // Di chuyen player
     private void move() {
         if(GameWindow.isUpPress) { // chi cho phep nhay 1 lan
-            Vector2D nextPosition = new Vector2D();
-            nextPosition.set(this.position.x,this.position.y + 1);
-            BoxCollider nextHitBox = new BoxCollider(nextPosition,this.anchor,hitBox.width,hitBox.height);
+//            Vector2D nextPosition = new Vector2D();
+//            nextPosition.set(this.position.x,this.position.y + 1);
+            BoxCollider nextHitBox = nextHitBox(this,0,1);
             if(GameObject.findIntersects(Platform.class,nextHitBox) != null) {
                 velocity.y = -JUMSPEED;
             }
@@ -66,16 +67,52 @@ public class Player extends GameObject {
             velocity.x = -HORZSPEED;
         }
     }
+
+    private void moveHorizontal() {
+//        Vector2D nextPositon = new Vector2D();
+//        double shiftDistance = Math.signum(velocity.x);
+//        nextPositon.set(this.position.x + shiftDistance,this.position.y);
+        BoxCollider nextHitBox = nextHitBox(this,velocity.x,0);
+        Platform platform = GameObject.findIntersects(Platform.class,nextHitBox);
+        if (platform != null) {
+            boolean moveContinue = true;
+            double shiftDistance = Math.signum(velocity.x);
+            while(moveContinue) {
+                if (GameObject.findIntersects(Platform.class,nextHitBox(this,shiftDistance,0)) != null) {
+                    moveContinue = false;
+                } else {
+                    shiftDistance++;
+                    this.position.add(shiftDistance, 0);
+                }
+            }
+            velocity.x = 0;
+        }
+        this.position.add(velocity.x,0);
+    }
+
     // Tao trong luc
     private void moveVertical() { //kiem tra xem vi tri tiep theo co cham vao platform hay ko, neu co thi dung lai
-        Vector2D nextPositon = new Vector2D();
-        nextPositon.set(this.position.x,this.position.y + velocity.y);
-        BoxCollider nextBoxCollider = new BoxCollider(nextPositon,this.anchor,hitBox.width,hitBox.height);
-        Platform platform = GameObject.findIntersects(Platform.class,nextBoxCollider);
+//        Vector2D nextPositon = new Vector2D();
+//        double shiftDistance = Math.signum(velocity.y);
+//        nextPositon.set(this.position.x,this.position.y + shiftDistance);
+        BoxCollider nextHitBox = nextHitBox(this,0,velocity.y);
+        Platform platform = GameObject.findIntersects(Platform.class,nextHitBox);
         if (platform != null) {
+            boolean moveContinue = true;
+            double shiftDistance = Math.signum(velocity.y);
+            while(moveContinue) {
+                if (GameObject.findIntersects(Platform.class,nextHitBox(this,0,shiftDistance)) != null) {
+                    moveContinue = false;
+                } else {
+                    shiftDistance++;
+                    this.position.add(0, shiftDistance);
+                }
+            }
             velocity.y = 0;
         }
+        this.position.add(0,velocity.y);
     }
+
     // Gioi han di chuyen
     private void limit() {
         if (position.x < PLAYER_SIZE/2) {
@@ -87,5 +124,13 @@ public class Player extends GameObject {
                     position.y
             );
         }
+    }
+
+
+    public BoxCollider nextHitBox(GameObject master,double shiftDistanceX, double shiftDistanceY) {
+        Vector2D nextPosition = new Vector2D();
+        nextPosition.set(master.position.x + shiftDistanceX,this.position.y + shiftDistanceY);
+        BoxCollider nextHitBox = new BoxCollider(nextPosition,this.anchor,hitBox.width,hitBox.height);
+        return nextHitBox;
     }
 }

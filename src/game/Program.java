@@ -12,7 +12,7 @@ import java.util.Comparator;
 public class Program {
     public static void main(String[] args) {
         GameWindow window = new GameWindow();
-        window.setTitle("Game Touhou");
+        window.setTitle("Game Tang bong");
         window.setResizable(false);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
