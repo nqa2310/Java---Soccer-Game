@@ -14,14 +14,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Player extends GameObject {
+    Renderer renderRight;
     BufferedImage playerImage;
     private final float GRAVITY = 0.5f;
     private final float JUMSPEED = 10;
     private final float HORZSPEED = 5;
     private final int PLAYER_SIZE = 70;
     public Player() {
+        renderRight = new Renderer("assets/images/players/right",1);
 //        renderer = new Renderer("assets/images/players/straight");
-        playerImage = SpriteUtils.loadImage("assets/images/players/straight/638283338.png");
+        playerImage = SpriteUtils.loadImage("assets/images/players/straight/stand1.png");
         velocity.set(0,0);
         position.set(200,200);
         hitBox = new BoxCollider(this,PLAYER_SIZE,PLAYER_SIZE);
@@ -29,14 +31,17 @@ public class Player extends GameObject {
     }
     @Override
     public void render(Graphics g) {
-        super.render(g);
-        Image image = playerImage.getScaledInstance(PLAYER_SIZE,PLAYER_SIZE,1);
-        g.drawImage(
-                image,
-                (int) (position.x - this.anchor.x*PLAYER_SIZE),
-                (int) (position.y - this.anchor.y*PLAYER_SIZE),
-                null
-        );
+//        if(GameWindow.isRightPress) {
+//            this.renderRight.render(g,this);
+//        } else {
+            Image image = playerImage.getScaledInstance(PLAYER_SIZE,PLAYER_SIZE,1);
+            g.drawImage(
+                    image,
+                    (int) (position.x - this.anchor.x*PLAYER_SIZE),
+                    (int) (position.y - this.anchor.y*PLAYER_SIZE),
+                    null
+            );
+//        }
 
     }
 
@@ -49,7 +54,7 @@ public class Player extends GameObject {
         moveHorizontal();
         moveVertical();
     }
-    
+
     // Di chuyen player
     private void move() {
         if(GameWindow.isUpPress) { // chi cho phep nhay 1 lan

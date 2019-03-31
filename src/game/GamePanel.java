@@ -1,5 +1,6 @@
 package game;
 
+import game.ball.Ball;
 import game.platform.Platform;
 import game.player.Player;
 
@@ -12,11 +13,13 @@ public class GamePanel extends JPanel {
     Player player;
     Background background;
     Platform platform;
+    Ball ball;
 
     public GamePanel() {
         background = new Background();
         platform = new Platform();
         player = new Player();
+        ball = new Ball();
     }
 
     public void gameLoop() {
