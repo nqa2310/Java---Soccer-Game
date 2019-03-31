@@ -18,10 +18,10 @@ public class Player extends GameObject {
     BufferedImage playerImage;
     private final float GRAVITY = 0.5f;
     private final float JUMSPEED = 10;
-    private final float HORZSPEED = 5;
+    private final float HORZSPEED = 7;
     private final int PLAYER_SIZE = 70;
     public Player() {
-        renderRight = new Renderer("assets/images/players/right",1);
+
 //        renderer = new Renderer("assets/images/players/straight");
         playerImage = SpriteUtils.loadImage("assets/images/players/straight/stand1.png");
         velocity.set(0,0);
@@ -31,9 +31,6 @@ public class Player extends GameObject {
     }
     @Override
     public void render(Graphics g) {
-//        if(GameWindow.isRightPress) {
-//            this.renderRight.render(g,this);
-//        } else {
             Image image = playerImage.getScaledInstance(PLAYER_SIZE,PLAYER_SIZE,1);
             g.drawImage(
                     image,
@@ -58,8 +55,6 @@ public class Player extends GameObject {
     // Di chuyen player
     private void move() {
         if(GameWindow.isUpPress) { // chi cho phep nhay 1 lan
-//            Vector2D nextPosition = new Vector2D();
-//            nextPosition.set(this.position.x,this.position.y + 1);
             BoxCollider nextHitBox = nextHitBox(this,0,1);
             if(GameObject.findIntersects(Platform.class,nextHitBox) != null) {
                 velocity.y = -JUMSPEED;
@@ -74,9 +69,6 @@ public class Player extends GameObject {
     }
 
     private void moveHorizontal() {
-//        Vector2D nextPositon = new Vector2D();
-//        double shiftDistance = Math.signum(velocity.x);
-//        nextPositon.set(this.position.x + shiftDistance,this.position.y);
         BoxCollider nextHitBox = nextHitBox(this,velocity.x,0);
         Platform platform = GameObject.findIntersects(Platform.class,nextHitBox);
         if (platform != null) {
@@ -97,9 +89,6 @@ public class Player extends GameObject {
 
     // Tao trong luc
     private void moveVertical() { //kiem tra xem vi tri tiep theo co cham vao platform hay ko, neu co thi dung lai
-//        Vector2D nextPositon = new Vector2D();
-//        double shiftDistance = Math.signum(velocity.y);
-//        nextPositon.set(this.position.x,this.position.y + shiftDistance);
         BoxCollider nextHitBox = nextHitBox(this,0,velocity.y);
         Platform platform = GameObject.findIntersects(Platform.class,nextHitBox);
         if (platform != null) {

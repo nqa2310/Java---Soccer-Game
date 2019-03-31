@@ -25,8 +25,6 @@ public class Renderer {
         this.image = image;
         this.currentIndex = 0;
         this.frameCount = 0;
-        this.currentIndex0 = 0;
-        this.frameCount0 = 0;
     }
     // TODO: 1.upgrade order fileName
     // TODO: 2.load file .png only
@@ -53,30 +51,6 @@ public class Renderer {
         }
     }
 
-    // load anh tu folde, scale va them vao mang images0
-    public Renderer(String folderPath, int i) {
-        if (i!=0) {
-            images0 = new ArrayList<>();
-            File folder = new File(folderPath);
-            java.util.List<String> fileNames = Arrays.asList(folder.list());
-            fileNames.sort(new Comparator<String>() {
-                @Override
-                public int compare(String o1, String o2) {
-                    return o1.compareTo(o2);
-                }
-            });
-            for (int j = 0; j < fileNames.size(); j++) {
-                String fileName = fileNames.get(j);
-                if (fileName.toLowerCase().endsWith(".png")) {
-                    BufferedImage image = SpriteUtils.loadImage(
-                            folderPath + "/" + fileName
-                    );
-                    Image im = image.getScaledInstance(70, 70, 1);
-                    images0.add(im);
-                }
-            }
-        }
-    }
 
     public Renderer(String folderPath, boolean isOnce) {
         this(folderPath);
@@ -113,26 +87,6 @@ public class Renderer {
                 frameCount = 0;
             }
         }
-        else if(images0 != null) { // render anh da scale
-            Image currentImage0 = images0.get(currentIndex0);
-            g.drawImage(
-                    currentImage0,
-                    (int) (master.position.x - master.anchor.x*PLAYER_SIZE),
-                    (int) (master.position.y - master.anchor.y*PLAYER_SIZE),
-                    null
-            );
 
-            frameCount0++;
-            if(frameCount0 > 10) {
-                currentIndex0++;
-                if(currentIndex0 >= images.size()) {
-                    if(isOnce) {
-                        master.deactive();
-                    }
-                    currentIndex0 = 0;
-                }
-                frameCount0 = 0;
-            }
-        }
     }
 }
