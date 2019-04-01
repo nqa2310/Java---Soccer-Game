@@ -4,7 +4,6 @@ import game.physics.BoxCollider;
 import game.renderer.Renderer;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class GameObject {
@@ -78,6 +77,7 @@ public class GameObject {
     public Vector2D anchor;
     public boolean active;
     public BoxCollider hitBox;
+    public ViewPort viewPort;
     //
 
 
@@ -87,11 +87,12 @@ public class GameObject {
         this.velocity = new Vector2D();
         this.active = true;
         this.anchor = new Vector2D(0.5,0.5);
+        viewPort = new ViewPort();
     }
 
-    public void render(Graphics g) {
+    public void render(Graphics g, ViewPort viewPort) {
         if(renderer != null) {
-            renderer.render(g, this);
+            renderer.render(g, viewPort.camera(this));
         }
     }
 

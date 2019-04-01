@@ -1,6 +1,7 @@
 package game;
 
 import game.ball.Ball;
+import game.maps.Map;
 import game.platform.Platform;
 import game.player.Player;
 
@@ -12,17 +13,20 @@ import java.util.Random;
 public class GamePanel extends JPanel {
     Player player;
     Background background;
-    Platform platform;
+    Map map;
     Ball ball;
 
     public GamePanel() {
         background = new Background();
-        platform = new Platform();
+        map = Map.load("assets/images/platformer/tvt.json");
+        map.generate();
         player = new Player();
         ball = new Ball();
+
     }
 
     public void gameLoop() {
+
         long lastLoop = 0;
         long delay = 1000 / 60;
         while(true) {
@@ -45,10 +49,9 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < GameObject.objects.size(); i++) {
             GameObject object = GameObject.objects.get(i);
             if (object.active) {
-                object.render(g);
+                object.render(g,ball.viewPort);
             }
         }
-//        }
     }
 
     private void runAll() {

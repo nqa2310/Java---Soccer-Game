@@ -1,6 +1,8 @@
 package game;
 
 import com.google.gson.Gson;
+import game.maps.Layer;
+import game.maps.Map;
 import game.utils.Utils;
 
 import javax.swing.*;
@@ -8,7 +10,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Map;
 
 /**
  * Created by huynq on 7/4/17.
@@ -22,12 +23,13 @@ public class Program {
 
         GamePanel panel = new GamePanel();
         panel.setPreferredSize(new Dimension(Settings.GAME_WIDTH, Settings.GAME_HEIGHT));
-        panel.setBackground(Color.cyan);
+        panel.setBackground(Color.black);
         window.add(panel);
         window.pack();
 
         window.setVisible(true);
 
         panel.gameLoop();
+
     }
 }

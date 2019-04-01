@@ -14,11 +14,8 @@ public class Renderer {
     private final int PLAYER_SIZE = 70;
     public BufferedImage image;
     public ArrayList<BufferedImage> images;
-    public ArrayList<Image> images0;
     int currentIndex;
-    int currentIndex0;
     int frameCount;
-    int frameCount0;
     boolean isOnce;
 
     public Renderer(BufferedImage image) {

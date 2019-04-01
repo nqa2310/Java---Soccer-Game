@@ -1,9 +1,6 @@
 package game.player;
 
-import game.GameObject;
-import game.GameWindow;
-import game.Settings;
-import game.Vector2D;
+import game.*;
 import game.physics.BoxCollider;
 import game.platform.Platform;
 import game.renderer.Renderer;
@@ -14,40 +11,34 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Player extends GameObject {
-    Renderer renderRight;
+    public ViewPort viewPort;
     BufferedImage playerImage;
     private final float GRAVITY = 0.5f;
     private final float JUMSPEED = 10;
-    private final float HORZSPEED = 7;
-    private final int PLAYER_SIZE = 70;
+    private final float HORZSPEED = 10;
+    private final int PLAYER_HEIGHT = 81;
+    private final int PLAYER_WIDTH = 50;
     public Player() {
 
-//        renderer = new Renderer("assets/images/players/straight");
+        viewPort = new ViewPort();
         playerImage = SpriteUtils.loadImage("assets/images/players/straight/stand1.png");
+        renderer = new Renderer(playerImage);
         velocity.set(0,0);
         position.set(200,200);
-        hitBox = new BoxCollider(this,PLAYER_SIZE,PLAYER_SIZE);
+        hitBox = new BoxCollider(this,PLAYER_WIDTH,PLAYER_HEIGHT);
 
     }
     @Override
-    public void render(Graphics g) {
-            Image image = playerImage.getScaledInstance(PLAYER_SIZE,PLAYER_SIZE,1);
-            g.drawImage(
-                    image,
-                    (int) (position.x - this.anchor.x*PLAYER_SIZE),
-                    (int) (position.y - this.anchor.y*PLAYER_SIZE),
-                    null
-            );
-//        }
-
+    public void render(Graphics g, ViewPort viewPort) {
+        super.render(g,viewPort);
     }
 
     @Override
     public void run() {
         velocity.y += GRAVITY;
-        velocity.x = 0;
+        velocity.x = 0;;
         move();
-        limit();
+//        limit();
         moveHorizontal();
         moveVertical();
     }
@@ -78,8 +69,8 @@ public class Player extends GameObject {
                 if (GameObject.findIntersects(Platform.class,nextHitBox(this,shiftDistance,0)) != null) {
                     moveContinue = false;
                 } else {
-                    shiftDistance++;
-                    this.position.add(shiftDistance, 0);
+                    shiftDistance += Math.signum(velocity.x);
+                    this.position.add(Math.signum(velocity.x), 0);
                 }
             }
             velocity.x = 0;
@@ -98,8 +89,8 @@ public class Player extends GameObject {
                 if (GameObject.findIntersects(Platform.class,nextHitBox(this,0,shiftDistance)) != null) {
                     moveContinue = false;
                 } else {
-                    shiftDistance++;
-                    this.position.add(0, shiftDistance);
+                    shiftDistance += Math.signum(velocity.y);
+                    this.position.add(0, Math.signum(velocity.y));
                 }
             }
             velocity.y = 0;
@@ -109,12 +100,12 @@ public class Player extends GameObject {
 
     // Gioi han di chuyen
     private void limit() {
-        if (position.x < PLAYER_SIZE/2) {
-            position.set(PLAYER_SIZE/2, position.y);
+        if (position.x < PLAYER_WIDTH/2) {
+            position.set(PLAYER_WIDTH/2, position.y);
         }
-        if (position.x > Settings.GAME_WIDTH - PLAYER_SIZE/2) {
+        if (position.x > Settings.GAME_WIDTH - PLAYER_WIDTH/2) {
             position.set(
-                    Settings.GAME_WIDTH-PLAYER_SIZE/2,
+                    Settings.GAME_WIDTH-PLAYER_WIDTH/2,
                     position.y
             );
         }
