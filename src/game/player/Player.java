@@ -36,7 +36,7 @@ public class Player extends GameObject {
     @Override
     public void run() {
         velocity.y += GRAVITY;
-        velocity.x = 0;;
+        velocity.x = 0;
         move();
 //        limit();
         moveHorizontal();

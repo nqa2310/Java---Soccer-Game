@@ -28,7 +28,7 @@ public class Layer {
                         platform.renderer = new Renderer(image);
                     }
                     platform.position.set(titleX * 32, titleY * 32);
-                    platform.hitBox = new BoxCollider(platform,35,35);
+                    platform.hitBox = new BoxCollider(platform,32,32);
                 }
             }
         }

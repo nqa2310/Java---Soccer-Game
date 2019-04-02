@@ -17,13 +17,13 @@ public class Ball extends GameObject {
     boolean moveHorizontalContinue = true;
     private final float GRAVITY = 0.3f;
     private final int BALL_SIZE = 16;
-    private float JUMSPEED = 5;
+    private float JUMP_SPEED = 5;
     private float ROLL_SPEED = 5;
     boolean touchGround = false;
     public Ball() {
         BufferedImage image = SpriteUtils.loadImage("assets/images/ball/Poke_ball_Single_Front.png");
         renderer = new Renderer(image);
-        position.set(200,100);
+        position.set(400,300);
         velocity.set(0,0);
         hitBox = new BoxCollider(this,16,16);
         viewPort = new ViewPort();
@@ -38,29 +38,30 @@ public class Ball extends GameObject {
     @Override
     public void run() {
         velocity.y += GRAVITY;
-//        viewPort.position2.x = 0;
-//        move();
-
-//        hitPlayerVertical();
+        friction(velocity);
+        viewPort.position2.x = 0;
+        hitPlayerVertical();
         hitPlayerHorizontal();
         bounceVertical();
         bounceHorizontal();
-        limit();
+
+//        limit();
     }
 
-    private void move() {
-        if(GameWindow.isUpPress) { // chi cho phep nhay 1 lan
-            BoxCollider nextHitBox = nextHitBox(this,0,1);
-            if(GameObject.findIntersects(Platform.class,nextHitBox) != null) {
-                velocity.y = -JUMSPEED;
+    private void friction(Vector2D velocity) {
+        if (velocity.x > 0) {
+            velocity.x -=  0.2f;
+            if (velocity.x < 0.5) {
+                velocity.x = 0;
             }
         }
-        if(GameWindow.isRightPress) {
-            velocity.x = 10;
+        else if (velocity.x < 0) {
+            velocity.x += 0.2f;
+            if (velocity.x > -0.5) {
+                velocity.x = 0;
+            }
         }
-        if(GameWindow.isLeftPress) {
-            velocity.x = -10;
-        }
+
     }
 
     private void bounceVertical() {
@@ -77,14 +78,17 @@ public class Ball extends GameObject {
                     this.position.add(0, Math.signum(velocity.y));
                 }
             }
-            velocity.y = 0;
-//            velocity.y = - velocity.y;
-//            velocity.y = 4 * velocity.y / 5;
-//            if (velocity.y < 0.1) {
-//                velocity.y = 0;
-//                velocity.y = 0;
-//                touchGround = true;
-//            }
+            if (velocity.y > 0) {
+                velocity.y = -JUMP_SPEED;
+            }
+            else if (velocity.y < 0) {
+                velocity.y = JUMP_SPEED;
+            }
+            JUMP_SPEED = 4 * JUMP_SPEED / 5;
+            if (JUMP_SPEED < 0.5) {
+                JUMP_SPEED = 0;
+                touchGround = true;
+            }
 
         }
         this.position.add(0,velocity.y);
@@ -99,7 +103,6 @@ public class Ball extends GameObject {
             while(moveContinue) {
                 if (GameObject.findIntersects(Platform.class,nextHitBox(this,shiftDistance,0)) != null) {
                     moveContinue = false;
-                    moveHorizontalContinue = false;
                 } else {
                     shiftDistance += Math.signum(velocity.x);
                     this.position.add(Math.signum(velocity.x), 0);
@@ -115,46 +118,25 @@ public class Ball extends GameObject {
         BoxCollider nextHitBox = nextHitBox(this,0,velocity.y);
         Player player = GameObject.findIntersects(Player.class,nextHitBox);
         if (player != null) {
-            boolean moveContinue = true;
-            double shiftDistance = Math.signum(velocity.y);
-            while(moveContinue) {
-                if (GameObject.findIntersects(Player.class,nextHitBox(this,0,shiftDistance)) != null) {
-                    moveContinue = false;
-                } else {
-                    shiftDistance += Math.signum(velocity.y);
-                    this.position.add(0, Math.signum(velocity.y));
-                }
-            }
             velocity.y = player.velocity.y/10;
             velocity.x = player.velocity.x / 2 ;
         }
-        if (GameObject.findIntersects(Platform.class,nextHitBox(this,velocity.x,0)) != null) {
-            this.position.add(0,0);
-        }
-        else {
-            this.position.add(velocity.x, velocity.y);
-        }
+
     }
 
     private void hitPlayerHorizontal() {
-//        BoxCollider nextHitBox = nextHitBox(this,velocity.x,0);
         Player player = GameObject.findIntersects(Player.class,this.hitBox);
         if (player != null) {
-//            boolean moveContinue = true;
-//            double shiftDistance = Math.signum(velocity.x);
-//            while(moveContinue) {
-//                if (GameObject.findIntersects(Player.class,this.hitBox) != null) {
-//                    moveContinue = false;
-//                } else {
-//                    shiftDistance += Math.signum(velocity.x);
-//                    this.position.add(Math.signum(velocity.x), 0);
-//                }
+//            if (GameObject.findIntersects(Platform.class,nextHitBox(this,player.velocity.x,0)) != null) {
+//                velocity.x = 0;
 //            }
-                velocity.y = player.velocity.y - 5;
-                velocity.x = player.velocity.x / 5;
+//            else {
+                velocity.x = player.velocity.x * 1.5;
+                velocity.y = player.velocity.y * 2;
+//            }
         }
 
-            this.position.add(velocity.x, velocity.y/10 );
+
 //        if (this.position.x == 400) {
 //            viewPort.position2.x = velocity.x * 2 ;
 //
