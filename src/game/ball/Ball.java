@@ -5,6 +5,7 @@ import game.physics.BoxCollider;
 import game.platform.Platform;
 
 import game.player.Player;
+import game.renderer.Animation;
 import game.renderer.Renderer;
 import tklibs.SpriteUtils;
 
@@ -14,16 +15,21 @@ import java.awt.image.BufferedImage;
 
 
 public class Ball extends GameObject {
+    Animation rollRight;
+    Animation rollLeft;
     public ViewPort viewPort;
     private final float GRAVITY = 0.3f;
-    private final int BALL_SIZE = 16;
+    private final int BALL_SIZE = 30;
     private float JUMP_SPEED = 7;
-    private float ROLL_SPEED = 5;
     private float GROUND_FRICTION = 0.5f;
     private float AIR_FRICTION = 0.02f;
     public Ball() {
-        BufferedImage image = SpriteUtils.loadImage("assets/images/ball/Poke_ball_Single_Front.png");
+        BufferedImage image = SpriteUtils.loadImage("assets/images/ball/ball0.png");
         renderer = new Renderer(image);
+        rollRight = new Animation("assets/images/ball/rollRight");
+        rollLeft = new Animation("assets/images/ball/rollLeft");
+        rollLeft.speed = 1;
+        rollRight.speed = 1;
         position.set(100,100);
         velocity.set(0,0);
         hitBox = new BoxCollider(this,16,16);
@@ -33,7 +39,15 @@ public class Ball extends GameObject {
 
     @Override
     public void render(Graphics g, ViewPort viewPort) {
-        super.render(g, viewPort);
+        if (velocity.x > 0) {
+            rollRight.render(g,viewPort.camera(this));
+        }
+        else if(velocity.x < 0) {
+            rollLeft.render(g,viewPort.camera(this));
+        }
+        else {
+            super.render(g, viewPort);
+        }
     }
 
     @Override
@@ -42,9 +56,7 @@ public class Ball extends GameObject {
         friction(velocity);
         viewPort.position2.x = 0;
         hitPlayerHorizontal();
-
         hitPlayerVertical();
-        hitPlayer();
         bounceVertical();
         bounceHorizontal();
 
@@ -93,16 +105,6 @@ public class Ball extends GameObject {
                 }
             }
             velocity.y = -velocity.y/2;
-//            if (velocity.y > 0) {
-//                velocity.y = -JUMP_SPEED;
-//            }
-//            else if (velocity.y < 0) {
-//                velocity.y = JUMP_SPEED;
-//            }
-//            JUMP_SPEED = 4 * JUMP_SPEED / 5;
-//            if (JUMP_SPEED < 0.5) {
-//                JUMP_SPEED = 0;
-//            }
 
         }
         this.position.add(0,velocity.y);
@@ -137,24 +139,13 @@ public class Ball extends GameObject {
         }
     }
 
-    private void hitPlayer() {
-        BoxCollider nextHitBox1 = nextHitBox(this,0,-1);
-        Player player = GameObject.findIntersects(Player.class,nextHitBox1);
-        BoxCollider nextHitBox2 = nextHitBox(this,ROLL_SPEED,0);
-        Platform platform = GameObject.findIntersects(Platform.class,nextHitBox2);
-        if (player != null ) {
-            velocity.y = -JUMP_SPEED;
-        }
-    }
-
     private void hitPlayerHorizontal() {
         Player player = GameObject.findIntersects(Player.class,this.hitBox);
         if (player != null) {
                 velocity.x = player.velocity.x;
-                velocity.y = player.velocity.y*1.5;
+                velocity.y = player.velocity.y*1.3;
         }
 
-//        viewPort.position2.x = velocity.x  ;
     }
 
     public BoxCollider nextHitBox(GameObject master, double shiftDistanceX, double shiftDistanceY) {

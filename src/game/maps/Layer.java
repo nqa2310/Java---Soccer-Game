@@ -20,15 +20,48 @@ public class Layer {
                 if (mapData != 0) {
                     Platform platform = new Platform();
                     if (mapData == 1) {
-                        BufferedImage image = SpriteUtils.loadImage("assets/images/platformer/Sprite/glass.png");
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/platformer/Sprite/glass.jpg");
                         platform.renderer = new Renderer(image);
                     }
                     else if (mapData == 2) {
-                        BufferedImage image = SpriteUtils.loadImage("assets/images/platformer/Sprite/platform.png");
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/platformer/Sprite/platform.jpg");
+                        platform.renderer = new Renderer(image);
+                    }
+                    else if (mapData == 3) {
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/platformer/Sprite/object.jpg");
+                        platform.renderer = new Renderer(image);
+                    }
+                    else if (mapData == 4) {
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/goal/goal.png");
+                        platform.renderer = new Renderer(image);
+                    }
+                    else if (mapData == 5) {
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/goal/goal1.png");
+                        platform.renderer = new Renderer(image);
+                    }
+                    else if (mapData == 6) {
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/goal/goal2.png");
+                        platform.renderer = new Renderer(image);
+                    }
+                    else if (mapData == 7) {
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/goal/goal3.png");
+                        platform.renderer = new Renderer(image);
+                    }
+                    else if (mapData == 8) {
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/goal/goal4.png");
+                        platform.renderer = new Renderer(image);
+                    }
+                    else if (mapData == 9) {
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/goal/goal5.png");
                         platform.renderer = new Renderer(image);
                     }
                     platform.position.set(titleX * 32, titleY * 32);
-                    platform.hitBox = new BoxCollider(platform,32,32);
+                    if (mapData == 4 | mapData ==6 | mapData == 8) {
+                        platform.hitBox = new BoxCollider(platform,0,0);
+                    }
+                    else {
+                        platform.hitBox = new BoxCollider(platform, 32, 32);
+                    }
                 }
             }
         }

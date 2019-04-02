@@ -1,20 +1,20 @@
 package game;
 
 import game.ball.Ball;
+import game.maps.Goal;
 import game.maps.Map;
-import game.platform.Platform;
 import game.player.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class GamePanel extends JPanel {
     Player player;
     Background background;
     Map map;
     Ball ball;
+    Goal goalRight;
+    Goal goalLeft;
 
     public GamePanel() {
         background = new Background();
@@ -22,6 +22,8 @@ public class GamePanel extends JPanel {
         map.generate();
         player = new Player();
         ball = new Ball();
+        goalRight = new Goal(3120,484,"assets/images/goal.png");
+        goalLeft = new Goal(53,484,"assets/images/goal - Copy.png");
 
     }
 

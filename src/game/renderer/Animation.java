@@ -10,14 +10,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class Renderer {
+public class Animation {
+    public int speed = 2;
     public BufferedImage image;
     public ArrayList<BufferedImage> images;
     int currentIndex;
     int frameCount;
     boolean isOnce;
 
-    public Renderer(BufferedImage image) {
+    public Animation(BufferedImage image) {
         this.image = image;
         this.currentIndex = 0;
         this.frameCount = 0;
@@ -26,7 +27,7 @@ public class Renderer {
     // TODO: 2.load file .png only
 
 
-    public Renderer(String folderPath) {
+    public Animation(String folderPath) {
         images = new ArrayList<>();
         File folder = new File(folderPath);
         java.util.List<String> fileNames = Arrays.asList(folder.list());
@@ -48,7 +49,7 @@ public class Renderer {
     }
 
 
-    public Renderer(String folderPath, boolean isOnce) {
+    public Animation(String folderPath, boolean isOnce) {
         this(folderPath);
         this.isOnce = isOnce;
     }
@@ -72,7 +73,7 @@ public class Renderer {
             );
 
             frameCount++;
-            if(frameCount > 10) {
+            if(frameCount > speed) {
                 currentIndex++;
                 if(currentIndex >= images.size()) {
                     if(isOnce) {
