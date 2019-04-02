@@ -1,6 +1,7 @@
 package game.player;
 
 import game.*;
+import game.ball.Ball;
 import game.physics.BoxCollider;
 import game.platform.Platform;
 import game.renderer.Renderer;
@@ -9,13 +10,14 @@ import tklibs.SpriteUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Set;
 
 public class Player extends GameObject {
     public ViewPort viewPort;
     BufferedImage playerImage;
-    private final float GRAVITY = 0.5f;
-    private final float JUMSPEED = 10;
-    private final float HORZSPEED = 10;
+    private final float GRAVITY = 0.4f;
+    private final float JUMSPEED = 7;
+    private final float HORZSPEED = 7;
     private final int PLAYER_HEIGHT = 81;
     private final int PLAYER_WIDTH = 50;
     public Player() {
@@ -24,7 +26,7 @@ public class Player extends GameObject {
         playerImage = SpriteUtils.loadImage("assets/images/players/straight/stand1.png");
         renderer = new Renderer(playerImage);
         velocity.set(0,0);
-        position.set(200,200);
+        position.set(100,200);
         hitBox = new BoxCollider(this,PLAYER_WIDTH,PLAYER_HEIGHT);
 
     }
@@ -36,6 +38,7 @@ public class Player extends GameObject {
     @Override
     public void run() {
         velocity.y += GRAVITY;
+        viewPort.position2.x = 0;
         velocity.x = 0;
         move();
 //        limit();
@@ -53,9 +56,28 @@ public class Player extends GameObject {
         }
         if(GameWindow.isRightPress) {
             velocity.x = HORZSPEED;
+            if (position.x < Settings.GAME_WIDTH/2) {
+                viewPort.position2.x = velocity.x / 2;
+            }
+            else if (position.x == Settings.GAME_WIDTH/2) {
+                viewPort.position2.x = velocity.x;
+            }
+            else if (position.x > Settings.GAME_WIDTH/2) {
+                viewPort.position2.x = velocity.x * 1.5;
+            }
         }
         if(GameWindow.isLeftPress) {
             velocity.x = -HORZSPEED;
+            if (position.x < Settings.GAME_WIDTH/2) {
+                viewPort.position2.x = velocity.x / 2;
+            }
+            else if (position.x == Settings.GAME_WIDTH/2) {
+                viewPort.position2.x = velocity.x;
+            }
+            else if (position.x > Settings.GAME_WIDTH/2) {
+                viewPort.position2.x = velocity.x * 1.5;
+            }
+
         }
     }
 
@@ -74,6 +96,7 @@ public class Player extends GameObject {
                 }
             }
             velocity.x = 0;
+            viewPort.position2.x = velocity.x;
         }
         this.position.add(velocity.x,0);
     }

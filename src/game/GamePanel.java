@@ -49,7 +49,7 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < GameObject.objects.size(); i++) {
             GameObject object = GameObject.objects.get(i);
             if (object.active) {
-                object.render(g,ball.viewPort);
+                object.render(g,player.viewPort);
             }
         }
     }
