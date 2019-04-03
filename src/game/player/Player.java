@@ -2,6 +2,7 @@ package game.player;
 
 import game.*;
 import game.ball.Ball;
+import game.enemy.Enemy;
 import game.physics.BoxCollider;
 import game.platform.Platform;
 import game.renderer.Animation;
@@ -41,7 +42,7 @@ public class Player extends GameObject {
         jumpLeft.speed = 10;
         jumpRight.speed = 10;
         velocity.set(0,0);
-        position.set(300,200);
+        position.set(400,200);
         hitBox = new BoxCollider(this,PLAYER_WIDTH,PLAYER_HEIGHT);
 
     }
@@ -72,6 +73,8 @@ public class Player extends GameObject {
         viewPort.position2.x = 0;
         velocity.x = 0;
         move();
+        hitEnemyHorizontal();
+        hitEnemyVertical();
 //        limit();
         moveHorizontal();
         moveVertical();
@@ -150,6 +153,22 @@ public class Player extends GameObject {
             velocity.y = 0;
         }
         this.position.add(0,velocity.y);
+    }
+
+    private void hitEnemyVertical() {
+        BoxCollider nextHitBox = nextHitBox(this,0,velocity.y);
+        Enemy enemy = GameObject.findIntersects(Enemy.class, nextHitBox);
+        if (enemy != null && !GameWindow.isUpPress) {
+            velocity.x = enemy.velocity.x;
+            velocity.y = 0;
+        }
+    }
+    private void hitEnemyHorizontal() {
+        Enemy enemy = GameObject.findIntersects(Enemy.class, this.hitBox);
+        if (enemy != null && position.x > 15) {
+            velocity.x = enemy.velocity.x;
+        }
+
     }
 
     // Gioi han di chuyen

@@ -12,12 +12,14 @@ public class GameWindow extends JFrame {
     public static boolean isRightPress;
     public static boolean isFirePress;
     public static boolean isStartPress;
+    public static boolean isAnyKeyPress;
 
     public GameWindow() {
         // bat su kien bam phim
         KeyAdapter keyHandler = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+                isAnyKeyPress = true;
                 if(e.getKeyCode() == KeyEvent.VK_W) {
                     isUpPress = true;
                 }
@@ -40,6 +42,7 @@ public class GameWindow extends JFrame {
 
             @Override
             public void keyReleased(KeyEvent e) {
+                isAnyKeyPress = false;
                 if(e.getKeyCode() == KeyEvent.VK_W) {
                     isUpPress = false;
                 }

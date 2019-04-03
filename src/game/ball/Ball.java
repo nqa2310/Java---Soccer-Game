@@ -1,7 +1,9 @@
 package game.ball;
 
 import game.*;
+import game.enemy.Enemy;
 import game.maps.GoalLeft;
+import game.maps.GoalRight;
 import game.physics.BoxCollider;
 import game.platform.Platform;
 
@@ -15,8 +17,6 @@ import java.awt.image.BufferedImage;
 
 
 public class Ball extends GameObject {
-    public int scoreLeft;
-    public int scoreRight;
     Animation rollRight;
     Animation rollLeft;
     public ViewPort viewPort;
@@ -26,14 +26,13 @@ public class Ball extends GameObject {
     private float GROUND_FRICTION = 0.5f;
     private float AIR_FRICTION = 0.02f;
     public Ball() {
-        scoreRight = scoreLeft = 0;
         BufferedImage image = SpriteUtils.loadImage("assets/images/ball/ball0.png");
         renderer = new Renderer(image);
         rollRight = new Animation("assets/images/ball/rollRight");
         rollLeft = new Animation("assets/images/ball/rollLeft");
         rollLeft.speed = 1;
         rollRight.speed = 1;
-        position.set(100,100);
+        position.set(500,200);
         velocity.set(0,0);
         hitBox = new BoxCollider(this,16,16);
         viewPort = new ViewPort();
@@ -58,9 +57,12 @@ public class Ball extends GameObject {
         velocity.y += GRAVITY;
         friction(velocity);
         viewPort.position2.x = 0;
+        goalLeftHit();
+        goalRightHit();
+        hitEnemyHorizontal();
+        hitEnemyVertical();
         hitPlayerHorizontal();
         hitPlayerVertical();
-        goalHit();
         bounceVertical();
         bounceHorizontal();
 
@@ -94,11 +96,10 @@ public class Ball extends GameObject {
 
     }
 
-    private void goalHit() {
+    private void goalLeftHit() {
         BoxCollider nextHitBox = nextHitBox(this,velocity.x,0);
         GoalLeft platform = GameObject.findIntersects(GoalLeft.class,nextHitBox);
         if (platform!= null) {
-            scoreRight += 1;
             boolean moveContinue = true;
             double shiftDistance = Math.signum(velocity.x);
             while(moveContinue) {
@@ -111,6 +112,25 @@ public class Ball extends GameObject {
             }
             velocity.x = 0;
 
+        }
+        this.position.add(velocity.x,0);
+    }
+
+    private void goalRightHit() {
+        BoxCollider nextHitBox = nextHitBox(this,velocity.x,0);
+        GoalRight platform = GameObject.findIntersects(GoalRight.class,nextHitBox);
+        if (platform!= null) {
+            boolean moveContinue = true;
+            double shiftDistance = Math.signum(velocity.x);
+            while(moveContinue) {
+                if (GameObject.findIntersects(GoalRight.class,nextHitBox(this,shiftDistance,0)) != null) {
+                    moveContinue = false;
+                } else {
+                    shiftDistance += Math.signum(velocity.x);
+                    this.position.add(Math.signum(velocity.x), 0);
+                }
+            }
+            velocity.x = 0;
         }
         this.position.add(velocity.x,0);
     }
@@ -169,6 +189,25 @@ public class Ball extends GameObject {
         if (player != null) {
                 velocity.x = player.velocity.x/2;
                 velocity.y = player.velocity.y*1.3;
+        }
+
+    }
+
+
+    private void hitEnemyVertical() {
+        BoxCollider nextHitBox = nextHitBox(this,0,velocity.y);
+        Enemy enemy = GameObject.findIntersects(Enemy.class,nextHitBox);
+        if (enemy != null) {
+            velocity.x = enemy.velocity.x;
+            velocity.y = - JUMP_SPEED;
+        }
+    }
+
+    private void hitEnemyHorizontal() {
+        Enemy enemy = GameObject.findIntersects(Enemy.class, this.hitBox);
+        if (enemy != null) {
+            velocity.x = enemy.velocity.x;
+            velocity.y = enemy.velocity.y * 1.3;
         }
 
     }

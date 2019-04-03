@@ -1,31 +1,27 @@
 package game;
 
 import game.ball.Ball;
+import game.enemy.Enemy;
 import game.maps.GoalLeft;
 import game.maps.GoalRight;
-import game.maps.Map;
 import game.player.Player;
+import game.scene.SceneManager;
+import game.scene.SceneStage1;
+import game.scene.SceneWelcome;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel {
-    Player player;
-    Background background;
-    Map map;
-    Ball ball;
-    GoalRight goalRight;
-    GoalLeft goalLeft;
+    public int scoreRight;
+    public int scoreLeft;
+    ArrayList<Enemy> enemies;
 
     public GamePanel() {
-        background = new Background();
-        map = Map.load("assets/images/platformer/tvt.json");
-        map.generate();
-        player = new Player();
-        ball = new Ball();
-        goalRight = new GoalRight(3119,481,"assets/images/goal.png");
-        goalLeft = new GoalLeft(48,481,"assets/images/goal - Copy.png");
-
+        scoreLeft = scoreRight = 0;
+        enemies = new ArrayList<>();
+        SceneManager.signNewScene(new SceneWelcome());
     }
 
     public void gameLoop() {
@@ -54,23 +50,63 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < GameObject.objects.size(); i++) {
             GameObject object = GameObject.objects.get(i);
             if (object.active) {
-                object.render(g,player.viewPort);
+                Player player = GameObject.find(Player.class);
+                if (player != null) {
+                    object.render(g, player.viewPort);
+                }
             }
         }
         g.setFont(font);
         g.setColor(Color.green);
-        g.drawString(ball.scoreRight + "",300,500);
+        Ball ball = GameObject.find(Ball.class);
+        if (ball != null) {
+            g.drawString(scoreLeft + "  -  " + scoreRight, 600, 30);
+        }
     }
 
     private void runAll() {
+//        summonEnemies();
         for (int i = 0; i < GameObject.objects.size(); i++) {
             GameObject object = GameObject.objects.get(i);
             if(object.active) {
                 object.run();
             }
         }
+        Player player = GameObject.find(Player.class);
+        Ball ball = GameObject.find(Ball.class);
+        GoalRight goalRight = GameObject.find(GoalRight.class);
+        GoalLeft goalLeft = GameObject.find(GoalLeft.class);
+        if (ball != null && goalLeft != null && goalRight != null) {
+            if (ball.position.x + ball.renderer.image.getWidth() / 2 < goalLeft.position.x + goalLeft.renderer.image.getWidth() / 2) {
+                scoreRight += 1;
+                player.position.set(goalLeft.position.x +100,200);
+                ball.position.set(goalLeft.position.x+200,200);
+                ball.velocity.set(0,0);
+            } else if (ball.position.x - ball.renderer.image.getWidth() / 2 > goalRight.position.x - goalRight.renderer.image.getWidth() / 2) {
+                scoreLeft += 1;
+                player.position.set(goalLeft.position.x +100,200);
+                ball.position.set(goalLeft.position.x+200,200);
+                ball.velocity.set(0,0);
+                player.viewPort.position2.set(-2000,0);
+            }
+        }
         System.out.println(GameObject.objects.size());
     }
 
-
+    int summonCount;
+    int waveCount;
+    private void summonEnemies() {
+        waveCount++;
+        if (waveCount > 200) {
+            summonCount++;
+            if(summonCount > 5) {
+                Enemy enemy = GameObject.recycle(Enemy.class);
+                if (enemy != null) {
+                    enemies.add(enemy);
+                    summonCount = 0;
+                    waveCount = 0;
+                }
+            }
+        }
+    }
 }

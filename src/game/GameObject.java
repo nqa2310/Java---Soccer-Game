@@ -90,6 +90,10 @@ public class GameObject {
         viewPort = new ViewPort();
     }
 
+    public static void clearAll() {
+        objects.clear();
+    }
+
     public void render(Graphics g, ViewPort viewPort) {
         if(renderer != null) {
             renderer.render(g, viewPort.camera(this));
