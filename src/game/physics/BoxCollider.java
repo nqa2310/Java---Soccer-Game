@@ -23,6 +23,14 @@ public class BoxCollider {
         this.anchor = master.anchor;
     }
 
+    public BoxCollider(double x, double y, int width, int height) {
+        this.position.x = x;
+        this.position.y = y;
+        this.width = width;
+        this.height = height;
+        this.anchor.set(0.5,0.5);
+    }
+
     public double top() {
         return this.position.y - this.anchor.y * this.height;
     }

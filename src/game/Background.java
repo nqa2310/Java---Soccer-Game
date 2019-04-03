@@ -9,9 +9,9 @@ import java.awt.image.BufferedImage;
 public class Background extends GameObject {
     BufferedImage backgroundImage;
     public Background() {
-        backgroundImage = SpriteUtils.loadImage("assets/images/background/445906.png");
+        backgroundImage = SpriteUtils.loadImage("assets/images/background/Untitled.png");
         renderer = new Renderer(backgroundImage);
-        position.set(1300,300);
+        position.set(1700,300);
     }
 
 }

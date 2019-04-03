@@ -1,7 +1,8 @@
 package game;
 
 import game.ball.Ball;
-import game.maps.Goal;
+import game.maps.GoalLeft;
+import game.maps.GoalRight;
 import game.maps.Map;
 import game.player.Player;
 
@@ -13,8 +14,8 @@ public class GamePanel extends JPanel {
     Background background;
     Map map;
     Ball ball;
-    Goal goalRight;
-    Goal goalLeft;
+    GoalRight goalRight;
+    GoalLeft goalLeft;
 
     public GamePanel() {
         background = new Background();
@@ -22,8 +23,8 @@ public class GamePanel extends JPanel {
         map.generate();
         player = new Player();
         ball = new Ball();
-        goalRight = new Goal(3120,484,"assets/images/goal.png");
-        goalLeft = new Goal(53,484,"assets/images/goal - Copy.png");
+        goalRight = new GoalRight(3119,481,"assets/images/goal.png");
+        goalLeft = new GoalLeft(48,481,"assets/images/goal - Copy.png");
 
     }
 
@@ -45,6 +46,8 @@ public class GamePanel extends JPanel {
         repaint(); // goi lai ham paint()
     }
 
+    static  Font font = new Font("Verdana",Font.BOLD,32);
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -54,6 +57,9 @@ public class GamePanel extends JPanel {
                 object.render(g,player.viewPort);
             }
         }
+        g.setFont(font);
+        g.setColor(Color.green);
+        g.drawString(ball.scoreRight + "",300,500);
     }
 
     private void runAll() {

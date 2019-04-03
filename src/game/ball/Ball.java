@@ -1,6 +1,7 @@
 package game.ball;
 
 import game.*;
+import game.maps.GoalLeft;
 import game.physics.BoxCollider;
 import game.platform.Platform;
 
@@ -9,12 +10,13 @@ import game.renderer.Animation;
 import game.renderer.Renderer;
 import tklibs.SpriteUtils;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
 public class Ball extends GameObject {
+    public int scoreLeft;
+    public int scoreRight;
     Animation rollRight;
     Animation rollLeft;
     public ViewPort viewPort;
@@ -24,6 +26,7 @@ public class Ball extends GameObject {
     private float GROUND_FRICTION = 0.5f;
     private float AIR_FRICTION = 0.02f;
     public Ball() {
+        scoreRight = scoreLeft = 0;
         BufferedImage image = SpriteUtils.loadImage("assets/images/ball/ball0.png");
         renderer = new Renderer(image);
         rollRight = new Animation("assets/images/ball/rollRight");
@@ -57,6 +60,7 @@ public class Ball extends GameObject {
         viewPort.position2.x = 0;
         hitPlayerHorizontal();
         hitPlayerVertical();
+        goalHit();
         bounceVertical();
         bounceHorizontal();
 
@@ -88,6 +92,27 @@ public class Ball extends GameObject {
             }
         }
 
+    }
+
+    private void goalHit() {
+        BoxCollider nextHitBox = nextHitBox(this,velocity.x,0);
+        GoalLeft platform = GameObject.findIntersects(GoalLeft.class,nextHitBox);
+        if (platform!= null) {
+            scoreRight += 1;
+            boolean moveContinue = true;
+            double shiftDistance = Math.signum(velocity.x);
+            while(moveContinue) {
+                if (GameObject.findIntersects(GoalLeft.class,nextHitBox(this,shiftDistance,0)) != null) {
+                    moveContinue = false;
+                } else {
+                    shiftDistance += Math.signum(velocity.x);
+                    this.position.add(Math.signum(velocity.x), 0);
+                }
+            }
+            velocity.x = 0;
+
+        }
+        this.position.add(velocity.x,0);
     }
 
     private void bounceVertical() {
@@ -142,7 +167,7 @@ public class Ball extends GameObject {
     private void hitPlayerHorizontal() {
         Player player = GameObject.findIntersects(Player.class,this.hitBox);
         if (player != null) {
-                velocity.x = player.velocity.x;
+                velocity.x = player.velocity.x/2;
                 velocity.y = player.velocity.y*1.3;
         }
 

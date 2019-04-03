@@ -32,7 +32,7 @@ public class Layer {
                         platform.renderer = new Renderer(image);
                     }
                     else if (mapData == 4) {
-                        BufferedImage image = SpriteUtils.loadImage("assets/images/goal/goal.png");
+                        BufferedImage image = SpriteUtils.loadImage("assets/images/platformer/Sprite/object2.png");
                         platform.renderer = new Renderer(image);
                     }
                     else if (mapData == 5) {
@@ -56,12 +56,8 @@ public class Layer {
                         platform.renderer = new Renderer(image);
                     }
                     platform.position.set(titleX * 32, titleY * 32);
-                    if (mapData == 4 | mapData ==6 | mapData == 8) {
-                        platform.hitBox = new BoxCollider(platform,0,0);
-                    }
-                    else {
-                        platform.hitBox = new BoxCollider(platform, 32, 32);
-                    }
+                    platform.hitBox = new BoxCollider(platform, 32, 32);
+
                 }
             }
         }
