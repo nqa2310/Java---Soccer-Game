@@ -96,7 +96,11 @@ public class GameObject {
 
     public void render(Graphics g, ViewPort viewPort) {
         if(renderer != null) {
-            renderer.render(g, viewPort.camera(this));
+            if(viewPort != null) {
+                renderer.render(g, viewPort.camera(this));
+            } else {
+                renderer.render(g, this);
+            }
         }
     }
 

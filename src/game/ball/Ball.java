@@ -113,7 +113,7 @@ public class Ball extends GameObject {
             velocity.x = 0;
 
         }
-        this.position.add(velocity.x,0);
+//        this.position.add(velocity.x,0);
     }
 
     private void goalRightHit() {
@@ -132,7 +132,7 @@ public class Ball extends GameObject {
             }
             velocity.x = 0;
         }
-        this.position.add(velocity.x,0);
+//        this.position.add(velocity.x,0);
     }
 
     private void bounceVertical() {
@@ -187,7 +187,7 @@ public class Ball extends GameObject {
     private void hitPlayerHorizontal() {
         Player player = GameObject.findIntersects(Player.class,this.hitBox);
         if (player != null) {
-                velocity.x = player.velocity.x/2;
+                velocity.x = player.velocity.x*1.2;
                 velocity.y = player.velocity.y*1.3;
         }
 

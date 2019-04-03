@@ -49,10 +49,16 @@ public class GamePanel extends JPanel {
         super.paint(g);
         for (int i = 0; i < GameObject.objects.size(); i++) {
             GameObject object = GameObject.objects.get(i);
-            if (object.active) {
-                Player player = GameObject.find(Player.class);
-                if (player != null) {
-                    object.render(g, player.viewPort);
+            if(SceneManager.currentScene instanceof SceneStage1) {
+                if (object.active) {
+                    Player player = GameObject.find(Player.class);
+                    if (player != null) {
+                        object.render(g, player.viewPort);
+                    }
+                }
+            } else {
+                if (object.active) {
+                    object.render(g, null);
                 }
             }
         }
@@ -65,7 +71,7 @@ public class GamePanel extends JPanel {
     }
 
     private void runAll() {
-//        summonEnemies();
+        summonEnemies();
         for (int i = 0; i < GameObject.objects.size(); i++) {
             GameObject object = GameObject.objects.get(i);
             if(object.active) {
@@ -87,17 +93,17 @@ public class GamePanel extends JPanel {
                 player.position.set(goalLeft.position.x +100,200);
                 ball.position.set(goalLeft.position.x+200,200);
                 ball.velocity.set(0,0);
-                player.viewPort.position2.set(-2000,0);
+                player.viewPort.position2.set(-2200,0);
             }
         }
-        System.out.println(GameObject.objects.size());
     }
 
     int summonCount;
     int waveCount;
+    int n;
     private void summonEnemies() {
         waveCount++;
-        if (waveCount > 200) {
+        if (waveCount > 300 - scoreLeft * 5) {
             summonCount++;
             if(summonCount > 5) {
                 Enemy enemy = GameObject.recycle(Enemy.class);

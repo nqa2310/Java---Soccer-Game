@@ -31,8 +31,8 @@ public class Player extends GameObject {
     public Player() {
 
         viewPort = new ViewPort();
-        playerImage = SpriteUtils.loadImage("assets/images/players/straight/stand1.png");
-        playerImage0 = SpriteUtils.loadImage("assets/images/players/straight/stand1 - Copy.png");
+        playerImage = SpriteUtils.loadImage("assets/images/players/right/player2.png");
+        playerImage0 = SpriteUtils.loadImage("assets/images/players/left/player2.png");
         renderer = new Renderer(playerImage);
         renderer0 = new Renderer(playerImage0);
         walkRight = new Animation("assets/images/players/right");

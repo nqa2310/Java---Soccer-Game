@@ -14,8 +14,9 @@ import java.util.Random;
 public class Enemy extends GameObject {
     Renderer renderer0;
     public ViewPort viewPort;
-    BufferedImage enemyImage;
-    BufferedImage enemyImage0;
+    BufferedImage enemyImage1;
+    BufferedImage enemyImage2;
+    BufferedImage enemyImage3;
 
     private final float GRAVITY = 0.4f;
     private final float HORZSPEED = 2.5f;
@@ -24,10 +25,10 @@ public class Enemy extends GameObject {
 
     public Enemy() {
         viewPort = new ViewPort();
-        enemyImage = SpriteUtils.loadImage("assets/images/players/straight/stand1 - Copy - Copy.png");
-        enemyImage0 = SpriteUtils.loadImage("assets/images/players/straight/stand1 - Copy - Copy.png");
-        renderer = new Renderer(enemyImage);
-        renderer0 = new Renderer(enemyImage0);
+        enemyImage1 = SpriteUtils.loadImage("assets/images/enemy.png");
+        enemyImage2 = SpriteUtils.loadImage("assets/images/enemy1.png");
+        enemyImage3 = SpriteUtils.loadImage("assets/images/enemy3.png");
+
 
 //        sliding.speed = 10;
         velocity.set(0,0);
@@ -35,10 +36,13 @@ public class Enemy extends GameObject {
         Random rand = new Random();
         int n = rand.nextInt(3);
         if (n == 0) {
+            renderer = new Renderer(enemyImage1);
             position.set(1216, 505);
         } else if (n == 1) {
+            renderer = new Renderer(enemyImage2);
             position.set(1216, 535);
         } else {
+            renderer = new Renderer(enemyImage3);
             position.set(1216, 565);
         }
         hitBox = new BoxCollider(this,ENEMY_WIDTH,ENEMY_HEIGHT);
