@@ -62,6 +62,10 @@ public class GamePanel extends JPanel {
                 }
             }
         }
+        drawScore(g);
+    }
+
+    private void drawScore(Graphics g) {
         g.setFont(font);
         g.setColor(Color.green);
         Ball ball = GameObject.find(Ball.class);
@@ -78,6 +82,11 @@ public class GamePanel extends JPanel {
                 object.run();
             }
         }
+        spawnPlayer();
+    }
+
+    private void spawnPlayer() {
+
         Player player = GameObject.find(Player.class);
         Ball ball = GameObject.find(Ball.class);
         GoalRight goalRight = GameObject.find(GoalRight.class);
@@ -88,12 +97,14 @@ public class GamePanel extends JPanel {
                 player.position.set(goalLeft.position.x +100,200);
                 ball.position.set(goalLeft.position.x+200,200);
                 ball.velocity.set(0,0);
+                player.animation.p = 0;
             } else if (ball.position.x - ball.renderer.image.getWidth() / 2 > goalRight.position.x - goalRight.renderer.image.getWidth() / 2) {
                 scoreLeft += 1;
                 player.position.set(goalLeft.position.x +100,200);
                 ball.position.set(goalLeft.position.x+200,200);
                 ball.velocity.set(0,0);
                 player.viewPort.position2.set(-2200,0);
+                player.animation.p = 0;
             }
         }
     }
@@ -115,4 +126,5 @@ public class GamePanel extends JPanel {
             }
         }
     }
+
 }

@@ -17,9 +17,7 @@ import java.awt.image.BufferedImage;
 
 
 public class Ball extends GameObject {
-    Animation rollRight;
-    Animation rollLeft;
-    public ViewPort viewPort;
+    ballAnimation animation;
     private final float GRAVITY = 0.3f;
     private final int BALL_SIZE = 30;
     private float JUMP_SPEED = 7;
@@ -28,35 +26,22 @@ public class Ball extends GameObject {
     public Ball() {
         BufferedImage image = SpriteUtils.loadImage("assets/images/ball/ball0.png");
         renderer = new Renderer(image);
-        rollRight = new Animation("assets/images/ball/rollRight");
-        rollLeft = new Animation("assets/images/ball/rollLeft");
-        rollLeft.speed = 1;
-        rollRight.speed = 1;
-        position.set(500,200);
+        animation = new ballAnimation();
+        position.set(248,200);
         velocity.set(0,0);
         hitBox = new BoxCollider(this,16,16);
-        viewPort = new ViewPort();
     }
 
 
     @Override
     public void render(Graphics g, ViewPort viewPort) {
-        if (velocity.x > 0) {
-            rollRight.render(g,viewPort.camera(this));
-        }
-        else if(velocity.x < 0) {
-            rollLeft.render(g,viewPort.camera(this));
-        }
-        else {
-            super.render(g, viewPort);
-        }
+        animation.render(g,viewPort,this,this.velocity);
     }
 
     @Override
     public void run() {
         velocity.y += GRAVITY;
         friction(velocity);
-        viewPort.position2.x = 0;
         goalLeftHit();
         goalRightHit();
         hitEnemyHorizontal();
@@ -65,8 +50,6 @@ public class Ball extends GameObject {
         hitPlayerVertical();
         bounceVertical();
         bounceHorizontal();
-
-//        limit();
     }
 
     private void friction(Vector2D velocity) {
@@ -113,7 +96,6 @@ public class Ball extends GameObject {
             velocity.x = 0;
 
         }
-//        this.position.add(velocity.x,0);
     }
 
     private void goalRightHit() {
@@ -132,7 +114,6 @@ public class Ball extends GameObject {
             }
             velocity.x = 0;
         }
-//        this.position.add(velocity.x,0);
     }
 
     private void bounceVertical() {
@@ -210,13 +191,6 @@ public class Ball extends GameObject {
             velocity.y = enemy.velocity.y * 1.3;
         }
 
-    }
-
-    public BoxCollider nextHitBox(GameObject master, double shiftDistanceX, double shiftDistanceY) {
-        Vector2D nextPosition = new Vector2D();
-        nextPosition.set(master.position.x + shiftDistanceX,this.position.y + shiftDistanceY);
-        BoxCollider nextHitBox = new BoxCollider(nextPosition,this.anchor,hitBox.width,hitBox.height);
-        return nextHitBox;
     }
 
     private void limit() {

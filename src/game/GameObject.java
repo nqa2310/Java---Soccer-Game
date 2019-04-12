@@ -122,4 +122,11 @@ public class GameObject {
         }
         return false;
     }
+
+    public BoxCollider nextHitBox(GameObject master, double shiftDistanceX, double shiftDistanceY) {
+        Vector2D nextPosition = new Vector2D();
+        nextPosition.set(master.position.x + shiftDistanceX,master.position.y + shiftDistanceY);
+        BoxCollider nextHitBox = new BoxCollider(nextPosition,master.anchor,hitBox.width,hitBox.height);
+        return nextHitBox;
+    }
 }
